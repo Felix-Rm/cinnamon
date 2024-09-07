@@ -15,6 +15,10 @@
 #include "cinm-mlir/Dialect/UPMEM/IR/UPMEMDialect.h"
 #include "cinm-mlir/Dialect/UPMEM/Transforms/Passes.h"
 
+#ifdef CINM_TORCH_MLIR_ENABLED
+#include "torch-mlir/Dialect/Torch/IR/TorchDialect.h"
+#endif
+
 #include <mlir/IR/DialectRegistry.h>
 #include <mlir/InitAllExtensions.h>
 
@@ -26,12 +30,15 @@
 
 using namespace mlir;
 
-
 int main(int argc, char *argv[]) {
   DialectRegistry registry;
   registerAllDialects(registry);
 
   registry.insert<cinm::CinmDialect, cnm::CnmDialect, upmem::UPMEMDialect>();
+
+#ifdef CINM_TORCH_MLIR_ENABLED
+  registry.insert<torch::Torch::TorchDialect>();
+#endif
 
   registerAllPasses();
   registerAllExtensions(registry);
