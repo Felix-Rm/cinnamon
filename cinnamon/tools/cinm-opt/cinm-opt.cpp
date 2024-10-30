@@ -23,8 +23,12 @@
 #include "cinm-mlir/Dialect/UPMEM/Transforms/Passes.h"
 
 #ifdef CINM_TORCH_MLIR_ENABLED
-#include "torch-mlir/Dialect/Torch/IR/TorchDialect.h"
-#include "torch-mlir/Dialect/TorchConversion/IR/TorchConversionDialect.h"
+#  include "torch-mlir/Conversion/Passes.h"
+#  include "torch-mlir/Dialect/Torch/IR/TorchDialect.h"
+#  include "torch-mlir/Dialect/TorchConversion/IR/TorchConversionDialect.h"
+#  include "torch-mlir/Dialect/TorchConversion/Transforms/Passes.h"
+#  include "torch-mlir/Dialect/Torch/Transforms/Passes.h"
+#  include "torch-mlir/RefBackend/Passes.h"
 #endif
 
 #include <mlir/IR/DialectRegistry.h>
@@ -42,15 +46,20 @@ int main(int argc, char *argv[]) {
   DialectRegistry registry;
   registerAllDialects(registry);
 
-  registry.insert<cinm::CinmDialect,           //
-                  cim::CimDialect,             //
-                  cnm::CnmDialect,             //
-                  memristor::MemristorDialect, //
+  registry.insert<cinm::CinmDialect,            //
+                  cim::CimDialect,              //
+                  cnm::CnmDialect,              //
+                  memristor::MemristorDialect,  //
                   upmem::UPMEMDialect>();
 
 #ifdef CINM_TORCH_MLIR_ENABLED
   registry.insert<torch::Torch::TorchDialect>();
   registry.insert<torch::TorchConversion::TorchConversionDialect>();
+
+  torch::registerTorchConversionPasses();
+  torch::registerConversionPasses();
+  torch::registerTorchPasses();
+  torch::RefBackend::registerRefBackendPasses();
 #endif
 
   registerAllPasses();
