@@ -25,3 +25,5 @@ llvm
 .cache
 .env
 sandbox
+
+**/__pycache__
