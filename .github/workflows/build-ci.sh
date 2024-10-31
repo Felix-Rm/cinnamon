@@ -85,7 +85,7 @@ fi
 if [[ $setup_python_venv -eq 1 ]]; then
   reconfigure_python_venv=0
   if [ ! -d "$py_venv_path" ]; then
-    python3 -m venv "$py_venv_path"
+    python3.12 -m venv "$py_venv_path"
     source "$py_venv_path/bin/activate"
     reconfigure_python_venv=1
   else
